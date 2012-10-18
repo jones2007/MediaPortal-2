@@ -121,7 +121,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
     public List<Genre> Genres { get; set; }
 
     [DataMember(Name = "production_companies")]
-    public List<ProductionCompany> ProductionCompanies { get; set; }
+    public List<Company> ProductionCompanies { get; set; }
 
     [DataMember(Name = "production_countries")]
     public List<ProductionCountry> ProductionCountries { get; set; }

@@ -34,7 +34,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
   //  "width": 1920
   //}
   [DataContract]
-  public class MovieImage
+  public class ImageFile
   {
     // Not filled by API!
     public int MovieId { get; set; }

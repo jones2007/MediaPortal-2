@@ -35,19 +35,19 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
   //  "width": 1920
   //}
   [DataContract]
-  public class ImageCollection
+  public class MovieImages
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
     [DataMember(Name = "backdrops")]
-    public List<MovieImage> Backdrops { get; set; }
+    public List<ImageFile> Backdrops { get; set; }
 
     [DataMember(Name = "covers")]
-    public List<MovieImage> Covers { get; set; }
+    public List<ImageFile> Covers { get; set; }
 
     [DataMember(Name = "posters")]
-    public List<MovieImage> Posters { get; set; }
+    public List<ImageFile> Posters { get; set; }
 
     public void SetMovieIds()
     {

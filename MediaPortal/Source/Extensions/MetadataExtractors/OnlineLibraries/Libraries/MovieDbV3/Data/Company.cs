@@ -31,7 +31,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
   //  "name": "Lucasfilm"
   //}
   [DataContract]
-  public class ProductionCompany
+  public class Company
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }

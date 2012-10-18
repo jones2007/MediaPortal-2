@@ -92,7 +92,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     public List<MovieSearchResult> SearchMovie(string query, string language)
     {
       string url = GetUrl(URL_QUERY, language) + "&query=" + HttpUtility.UrlEncode(query);
-      PagedMovieSearchResult results = Download<PagedMovieSearchResult>(url);
+      PagedSearchResult<MovieSearchResult> results = Download<PagedSearchResult<MovieSearchResult>>(url);
       return results.Results;
     }
 
@@ -157,15 +157,15 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     }
 
     /// <summary>
-    /// Returns a <see cref="ImageCollection"/> for the given <paramref name="id"/>.
+    /// Returns a <see cref="MovieImages"/> for the given <paramref name="id"/>.
     /// </summary>
     /// <param name="id">TMDB id of movie</param>
     /// <param name="language">Language</param>
     /// <returns>Image collection</returns>
-    public ImageCollection GetImages(int id, string language)
+    public MovieImages GetImages(int id, string language)
     {
       string url = GetUrl(URL_GETIMAGES, language, id);
-      ImageCollection result = Download<ImageCollection>(url);
+      MovieImages result = Download<MovieImages>(url);
       result.SetMovieIds();
       return result;
     }
@@ -176,7 +176,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     /// <param name="image">Image to download</param>
     /// <param name="category">Image category (Poster, Cover, Backdrop...)</param>
     /// <returns><c>true</c> if successful</returns>
-    public bool DownloadImage(MovieImage image, string category)
+    public bool DownloadImage(ImageFile image, string category)
     {
       string cacheFileName = CreateAndGetCacheName(image, category);
       if (string.IsNullOrEmpty(cacheFileName))
@@ -274,12 +274,12 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     }
 
     /// <summary>
-    /// Creates a local file name for loading and saving <see cref="MovieImage"/>s.
+    /// Creates a local file name for loading and saving <see cref="ImageFile"/>s.
     /// </summary>
     /// <param name="image"></param>
     /// <param name="category"></param>
     /// <returns>Cache file name or <c>null</c> if directory could not be created</returns>
-    protected string CreateAndGetCacheName(MovieImage image, string category)
+    protected string CreateAndGetCacheName(ImageFile image, string category)
     {
       try
       {

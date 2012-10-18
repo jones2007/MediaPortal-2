@@ -28,7 +28,7 @@ using System.Runtime.Serialization;
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   [DataContract]
-  internal class PagedMovieSearchResult
+  internal class PagedSearchResult<T>
   {
     [DataMember(Name = "page")]
     public int Page { get; set; }
@@ -40,6 +40,6 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
     public int TotalResults { get; set; }
 
     [DataMember(Name = "results")]
-    public List<MovieSearchResult> Results { get; set; }
+    public List<T> Results { get; set; }
   }
 }

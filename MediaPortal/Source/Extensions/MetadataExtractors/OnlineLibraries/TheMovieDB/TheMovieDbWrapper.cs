@@ -230,13 +230,13 @@ namespace MediaPortal.Extensions.OnlineLibraries.TheMovieDB
     /// <param name="id">TMDB ID of movie</param>
     /// <param name="imageCollection">Returns the ImageCollection</param>
     /// <returns><c>true</c> if successful</returns>
-    public bool GetMovieFanArt(int id, out ImageCollection imageCollection)
+    public bool GetMovieFanArt(int id, out MovieImages imageCollection)
     {
       imageCollection = _movieDbHandler.GetImages(id, null); // Download all image information, filter later!
       return imageCollection != null;
     }
 
-    public bool DownloadImage(MovieImage image, string category)
+    public bool DownloadImage(ImageFile image, string category)
     {
       return _movieDbHandler.DownloadImage(image, category);
     }

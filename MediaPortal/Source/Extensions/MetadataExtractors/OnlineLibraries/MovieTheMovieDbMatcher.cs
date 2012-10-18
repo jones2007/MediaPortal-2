@@ -307,7 +307,7 @@ namespace MediaPortal.Extensions.OnlineLibraries
         if (_movieDb.GetMovie(movieDbId, out movie) && movie.Collection != null)
           SaveBanners(movie.Collection);
 
-        ImageCollection imageCollection;
+        MovieImages imageCollection;
         if (!_movieDb.GetMovieFanArt(movieDbId, out imageCollection))
           return;
 
@@ -333,13 +333,13 @@ namespace MediaPortal.Extensions.OnlineLibraries
       ServiceRegistration.Get<ILogger>().Debug("MovieTheMovieDbMatcher Download Collection: Saved {0} {1}", movieCollection.Name, result);
     }
 
-    private int SaveBanners(IEnumerable<MovieImage> banners, string category)
+    private int SaveBanners(IEnumerable<ImageFile> banners, string category)
     {
       if (banners == null)
         return 0;
 
       int idx = 0;
-      foreach (MovieImage banner in banners.Where(b => b.Language == null || b.Language == _movieDb.PreferredLanguage))
+      foreach (ImageFile banner in banners.Where(b => b.Language == null || b.Language == _movieDb.PreferredLanguage))
       {
         if (idx >= MAX_FANART_IMAGES)
           break;
