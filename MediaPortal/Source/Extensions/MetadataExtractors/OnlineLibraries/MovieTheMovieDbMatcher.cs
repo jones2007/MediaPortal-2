@@ -314,7 +314,6 @@ namespace MediaPortal.Extensions.OnlineLibraries
         // Save Banners
         ServiceRegistration.Get<ILogger>().Debug("MovieTheMovieDbMatcher Download: Begin saving banners for ID {0}", movieDbId);
         SaveBanners(imageCollection.Backdrops, "Backdrops");
-        SaveBanners(imageCollection.Covers, "Covers");
         SaveBanners(imageCollection.Posters, "Posters");
         ServiceRegistration.Get<ILogger>().Debug("MovieTheMovieDbMatcher Download: Finished saving banners for ID {0}", movieDbId);
 

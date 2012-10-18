@@ -43,15 +43,11 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
     [DataMember(Name = "backdrops")]
     public List<ImageFile> Backdrops { get; set; }
 
-    [DataMember(Name = "covers")]
-    public List<ImageFile> Covers { get; set; }
-
     [DataMember(Name = "posters")]
     public List<ImageFile> Posters { get; set; }
 
     public void SetMovieIds()
     {
-      if (Covers != null) Covers.ForEach(c => c.MovieId = Id);
       if (Backdrops != null) Backdrops.ForEach(c => c.MovieId = Id);
       if (Posters != null) Posters.ForEach(c => c.MovieId = Id);
     }
