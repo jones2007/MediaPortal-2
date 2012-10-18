@@ -1,4 +1,4 @@
-﻿#region Copyright (C) 2007-2012 Team MediaPortal
+#region Copyright (C) 2007-2012 Team MediaPortal
 
 /*
     Copyright (C) 2007-2012 Team MediaPortal
@@ -22,38 +22,26 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   //{
-  //  "aspect_ratio": 1.78,
-  //  "file_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  //  "height": 1080,
-  //  "iso_639_1": null,
-  //  "width": 1920
+  //  "id": 1,
+  //  "name": "Lucasfilm"
   //}
   [DataContract]
-  public class ImageCollection
+  public class ProductionCompany
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
-    [DataMember(Name = "backdrops")]
-    public List<MovieImage> Backdrops { get; set; }
+    [DataMember(Name = "name")]
+    public string Name { get; set; }
 
-    [DataMember(Name = "covers")]
-    public List<MovieImage> Covers { get; set; }
-
-    [DataMember(Name = "posters")]
-    public List<MovieImage> Posters { get; set; }
-
-    public void SetMovieIds()
+    public override string ToString()
     {
-      if (Covers != null) Covers.ForEach(c => c.MovieId = Id);
-      if (Backdrops != null) Backdrops.ForEach(c => c.MovieId = Id);
-      if (Posters != null) Posters.ForEach(c => c.MovieId = Id);
+      return Name;
     }
   }
 }
