@@ -61,15 +61,26 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Matches\MatchStorage.cs" />
-    <Compile Include="Libraries\MovieDbV3\Data\CastItem.cs" />
-    <Compile Include="Libraries\MovieDbV3\Data\CrewItem.cs" />
     <Compile Include="Libraries\MovieDbV3\Data\Genre.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\CompanySearchResult.cs" />
     <Compile Include="Libraries\MovieDbV3\Data\MovieCollection.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\AbstractMovie.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\AbstractPerson.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\MovieCollectionInfo.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\MovieCollectionImages.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\MovieRating.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\PersonCredits.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\PersonImages.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\PersonInfo.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\MovieAlternativeTitles.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\MovieKeywords.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\MovieTranslations.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\MovieReleases.cs" />
     <Compile Include="Libraries\MovieDbV3\Data\MovieTrailers.cs" />
     <Compile Include="Libraries\MovieDbV3\Data\MovieCasts.cs" />
     <Compile Include="Libraries\MovieDbV3\Data\Company.cs" />
-    <Compile Include="Libraries\MovieDbV3\Data\ProductionCountry.cs" />
-    <Compile Include="Libraries\MovieDbV3\Data\Trailer.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\PersonSearchResult.cs" />
+    <Compile Include="Libraries\MovieDbV3\Data\CompanyInfo.cs" />
     <Compile Include="Matches\MovieCollectionMatch.cs" />
     <Compile Include="TheMovieDB\NamePreprocessor.cs" />
     <Compile Include="Matches\BaseMatcher.cs" />

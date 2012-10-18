@@ -22,39 +22,58 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the basic information for a specific MovieCollection.
+  /// Contains all available alternative titles for a specific <see cref="Movie"/>.
+  /// http://help.themoviedb.org/kb/api/movie-alternative-titles
   /// </summary>
   /// <example>
   /// {
-  ///   "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  ///   "id": 10,
-  ///   "name": "Star Wars Collection",
-  ///   "poster_path": "/6rddZZpxMQkGlpQYVVxb2LdQRI3.jpg"
+  ///   "id": 11,
+  ///   "titles": [
+  ///     {
+  ///       "iso_3166_1": "ES",
+  ///       "title": "La guerra de las galaxias. Episodio IV: Una nueva esperanza"
+  ///     }
+  ///   ]
   /// }
   /// </example>
   [DataContract]
-  public class MovieCollection
+  public class MovieAlternativeTitles
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
+    #region AlternativeTitle class
 
-    [DataMember(Name = "backdrop_path")]
-    public string BackdropPath { get; set; }
-
-    [DataMember(Name = "poster_path")]
-    public string PosterPath { get; set; }
-
-    public override string ToString()
+    /// <example>
+    ///     {
+    ///       "iso_3166_1": "ES",
+    ///       "title": "La guerra de las galaxias. Episodio IV: Una nueva esperanza"
+    ///     }
+    /// </example>
+    [DataContract]
+    public class AlternativeTitle
     {
-      return Name;
+      [DataMember(Name = "iso_3166_1")]
+      public string CountryCode { get; set; }
+
+      [DataMember(Name = "title")]
+      public string Title { get; set; }
+
+      public override string ToString()
+      {
+        return Title;
+      }
     }
+
+    #endregion
+
+    [DataMember(Name = "titles")]
+    public List<AlternativeTitle> Titles { get; set; }
   }
 }

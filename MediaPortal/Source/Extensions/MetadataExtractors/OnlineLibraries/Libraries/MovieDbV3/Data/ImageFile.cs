@@ -1,4 +1,4 @@
-#region Copyright (C) 2007-2012 Team MediaPortal
+﻿#region Copyright (C) 2007-2012 Team MediaPortal
 
 /*
     Copyright (C) 2007-2012 Team MediaPortal
@@ -26,19 +26,21 @@ using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
-  //{
-  //  "aspect_ratio": 1.78,
-  //  "file_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  //  "height": 1080,
-  //  "iso_639_1": null,
-  //  "width": 1920
-  //}
+  /// <summary>
+  /// Represents a single image file.
+  /// </summary>
+  /// <example>
+  /// {
+  ///   "file_path":"/zEbgoayf0MfuSznehhXdaP2YkeH.jpg",
+  ///   "width":700,
+  ///   "height":983,
+  ///   "iso_639_1":null,
+  ///   "aspect_ratio":0.71
+  /// }
+  /// </example>
   [DataContract]
   public class ImageFile
   {
-    // Not filled by API!
-    public int MovieId { get; set; }
-
     [DataMember(Name = "aspect_ratio")]
     public float AspectRatio { get; set; }
 
@@ -53,10 +55,37 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 
     [DataMember(Name = "iso_639_1")]
     public string Language { get; set; }
-    
+
+    // Not filled by API!
+    public int ParentObjectId { get; set; }
+
     public override string ToString()
     {
       return FilePath;
     }
+  }
+
+  /// <summary>
+  /// Represents a single image file including rating information.
+  /// </summary>
+  /// <example>
+  /// {
+  ///   "file_path": "/fdmSovGcTO4qeYH4llwqDsYi5cB.jpg",
+  ///   "width": 500,
+  ///   "height": 713,
+  ///   "iso_639_1": "en",
+  ///   "aspect_ratio": 0.7,
+  ///   "vote_average": 2.7,
+  ///   "vote_count": 5
+  /// }
+  /// </example>
+  [DataContract]
+  public class RatedImageFile : ImageFile
+  {
+    [DataMember(Name = "vote_average")]
+    public float VoteAverage { get; set; }
+
+    [DataMember(Name = "vote_count")]
+    public int VoteCount { get; set; }
   }
 }

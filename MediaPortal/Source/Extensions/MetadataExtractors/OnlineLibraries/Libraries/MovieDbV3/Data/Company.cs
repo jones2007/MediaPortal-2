@@ -26,10 +26,15 @@ using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
-  //{
-  //  "id": 1,
-  //  "name": "Lucasfilm"
-  //}
+  /// <summary>
+  /// Contains the basic information for a specific Company.
+  /// </summary>
+  /// <example>
+  ///     {
+  ///       "id": 1,
+  ///       "name": "Lucasfilm"
+  ///     }
+  /// </example>
   [DataContract]
   public class Company
   {

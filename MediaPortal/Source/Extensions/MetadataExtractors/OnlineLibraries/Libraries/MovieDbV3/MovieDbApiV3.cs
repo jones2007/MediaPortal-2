@@ -283,7 +283,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     {
       try
       {
-        string folder = Path.Combine(_cachePath, string.Format(@"{0}\{1}", image.MovieId, category));
+        string folder = Path.Combine(_cachePath, string.Format(@"{0}\{1}", image.ParentObjectId, category));
         if (!Directory.Exists(folder))
           Directory.CreateDirectory(folder);
         return Path.Combine(folder, image.FilePath.TrimStart(new[] { '/' }));

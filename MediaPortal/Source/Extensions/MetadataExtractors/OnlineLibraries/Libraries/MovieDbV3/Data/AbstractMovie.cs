@@ -22,39 +22,35 @@
 
 #endregion
 
+using System;
 using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the basic information for a specific MovieCollection.
+  /// Contains the basic information for a specific Movie.
   /// </summary>
-  /// <example>
-  /// {
-  ///   "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  ///   "id": 10,
-  ///   "name": "Star Wars Collection",
-  ///   "poster_path": "/6rddZZpxMQkGlpQYVVxb2LdQRI3.jpg"
-  /// }
-  /// </example>
   [DataContract]
-  public class MovieCollection
+  public abstract class AbstractMovie
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
+    [DataMember(Name = "title")]
+    public string Title { get; set; }
 
-    [DataMember(Name = "backdrop_path")]
-    public string BackdropPath { get; set; }
+    [DataMember(Name = "release_date")]
+    public DateTime? ReleaseDate { get; set; }
 
     [DataMember(Name = "poster_path")]
     public string PosterPath { get; set; }
 
+    [DataMember(Name = "backdrop_path")]
+    public string BackdropPath { get; set; }
+
     public override string ToString()
     {
-      return Name;
+      return Title;
     }
   }
 }

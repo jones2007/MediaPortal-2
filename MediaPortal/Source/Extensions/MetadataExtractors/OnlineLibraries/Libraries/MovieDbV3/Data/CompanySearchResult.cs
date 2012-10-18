@@ -26,22 +26,33 @@ using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
-  //{
-  //  "iso_3166_1": "US",
-  //  "name": "United States of America"
-  //}
+  /// <summary>
+  /// Represents a single item in a PagedSearchResult.
+  /// http://help.themoviedb.org/kb/api/search-companies
+  /// </summary>
+  /// <example>
+  /// {
+  ///   "page": 1,
+  ///   "results": [
+  ///     {
+  ///       "id": 34,
+  ///       "logo_path": "/56VlAu08MIE926dQNfBcUwTY8np.png",
+  ///       "name": "Sony Pictures"
+  ///     },
+  ///     {
+  ///       "id": 2251,
+  ///       "logo_path": null,
+  ///       "name": "Sony Pictures Animation"
+  ///     }
+  ///   ],
+  ///   "total_pages": 1,
+  ///   "total_results": 2
+  /// }
+  /// </example>
   [DataContract]
-  public class ProductionCountry
+  public class CompanySearchResult : Company
   {
-    [DataMember(Name = "iso_3166_1")]
-    public string Id { get; set; }
-
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
-
-    public override string ToString()
-    {
-      return Name;
-    }
+    [DataMember(Name = "logo_path")]
+    public string LogoPath { get; set; }
   }
 }

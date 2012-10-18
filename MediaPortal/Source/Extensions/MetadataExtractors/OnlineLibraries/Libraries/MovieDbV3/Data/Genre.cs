@@ -26,10 +26,15 @@ using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
-//{
-//      "id": 28,
-//      "name": "Action"
-//  },
+  /// <summary>
+  /// Represents a single genre.
+  /// </summary>
+  /// <example>
+  ///     {
+  ///       "id": 28,
+  ///       "name": "Action"
+  ///     }
+  /// </example>
   [DataContract]
   public class Genre
   {

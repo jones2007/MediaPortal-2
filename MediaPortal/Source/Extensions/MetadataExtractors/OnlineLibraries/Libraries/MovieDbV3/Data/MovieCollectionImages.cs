@@ -22,39 +22,52 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the basic information for a specific MovieCollection.
+  /// Represents a list of available backdrop and poster <see cref="ImageFile" />s for a specific <see cref="MovieCollection" />.
+  /// http://help.themoviedb.org/kb/api/collection-images
   /// </summary>
   /// <example>
   /// {
-  ///   "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  ///   "id": 10,
-  ///   "name": "Star Wars Collection",
-  ///   "poster_path": "/6rddZZpxMQkGlpQYVVxb2LdQRI3.jpg"
+  ///   "backdrops": [{
+  ///     "aspect_ratio": 1.78,
+  ///     "file_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
+  ///     "height": 1080,
+  ///     "iso_639_1": null,
+  ///     "width": 1920
+  ///     }
+  ///   ],
+  ///   "id": 11,
+  ///   "posters": [{
+  ///     "aspect_ratio": 0.67,
+  ///     "file_path": "/qoETrQ73Jbd2LDN8EUfNgUerhzG.jpg",
+  ///     "height": 1500,
+  ///     "iso_639_1": "en",
+  ///     "width": 1000
+  ///     }
+  ///   ]
   /// }
   /// </example>
   [DataContract]
-  public class MovieCollection
+  public class MovieCollectionImages
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
+    [DataMember(Name = "backdrops")]
+    public List<ImageFile> Backdrops { get; set; }
 
-    [DataMember(Name = "backdrop_path")]
-    public string BackdropPath { get; set; }
+    [DataMember(Name = "posters")]
+    public List<ImageFile> Posters { get; set; }
 
-    [DataMember(Name = "poster_path")]
-    public string PosterPath { get; set; }
-
-    public override string ToString()
+    public void SetCollectionIds()
     {
-      return Name;
+      if (Backdrops != null) Backdrops.ForEach(c => c.ParentObjectId = Id);
+      if (Posters != null) Posters.ForEach(c => c.ParentObjectId = Id);
     }
   }
 }

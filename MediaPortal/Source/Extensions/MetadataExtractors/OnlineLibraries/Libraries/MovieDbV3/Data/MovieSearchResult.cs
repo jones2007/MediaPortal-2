@@ -27,32 +27,40 @@ using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
-  //  "backdrop_path": "/AkE7LQs2hPMG5tpWYcum847Knre.jpg",
-  //  "id": 1891,
-  //  "original_title": "Star Wars: Episode V - The Empire Strikes Back",
-  //  "popularity": 8412.049,
-  //  "poster_path": "/6u1fYtxG5eqjhtCPDx04pJphQRW.jpg",
-  //  "release_date": "1980-05-21",
-  //  "title": "Star Wars: Episode V - The Empire Strikes Back"
+  /// <summary>
+  /// Represents a single item in a PagedSearchResult.
+  /// http://help.themoviedb.org/kb/api/search-movies
+  /// </summary>
+  /// <example>
+  ///     {
+  ///       "adult": false,
+  ///       "backdrop_path": "/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg",
+  ///       "id": 550,
+  ///       "original_title": "Fight Club",
+  ///       "release_date": "1999-10-15",
+  ///       "poster_path": "/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg",
+  ///       "popularity": 61151.745000000003,
+  ///       "title": "Fight Club",
+  ///       "vote_average": 9.0999999999999996,
+  ///       "vote_count": 174
+  ///     }
+  /// </example>
   [DataContract]
-  public class MovieSearchResult
+  public class MovieSearchResult : AbstractMovie
   {
-    [DataMember(Name = "id")]
-    public int Id { get; set; }
-
-    [DataMember(Name = "title")]
-    public string Title { get; set; }
-
     [DataMember(Name = "original_title")]
     public string OriginalTitle { get; set; }
 
-    [DataMember(Name = "poster_path")]
-    public string PosterPath { get; set; }
+    [DataMember(Name = "adult")]
+    public bool Adult { get; set; }
 
-    [DataMember(Name = "backdrop_path")]
-    public string BackdropPath { get; set; }
+    [DataMember(Name = "popularity")]
+    public float? Popularity { get; set; }
 
-    [DataMember(Name = "release_date")]
-    public DateTime? ReleaseDate { get; set; }
+    [DataMember(Name = "vote_average")]
+    public float? VoteAverage { get; set; }
+
+    [DataMember(Name = "vote_count")]
+    public int? VoteCount { get; set; }
   }
 }

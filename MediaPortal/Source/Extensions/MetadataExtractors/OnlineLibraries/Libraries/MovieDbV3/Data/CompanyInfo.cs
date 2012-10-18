@@ -1,4 +1,4 @@
-﻿#region Copyright (C) 2007-2012 Team MediaPortal
+#region Copyright (C) 2007-2012 Team MediaPortal
 
 /*
     Copyright (C) 2007-2012 Team MediaPortal
@@ -27,34 +27,36 @@ using System.Runtime.Serialization;
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the basic information for a specific MovieCollection.
+  /// Contains all available information about a specific <see cref="Company"/>.
+  /// http://help.themoviedb.org/kb/api/company-info
   /// </summary>
   /// <example>
   /// {
-  ///   "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  ///   "id": 10,
-  ///   "name": "Star Wars Collection",
-  ///   "poster_path": "/6rddZZpxMQkGlpQYVVxb2LdQRI3.jpg"
+  ///   "description": null,
+  ///   "headquarters": null,
+  ///   "homepage": null,
+  ///   "id": 1,
+  ///   "logo_path": "/8rUnVMVZjlmQsJ45UGotD0Uznxj.png",
+  ///   "name": "Lucasfilm",
+  ///   "parent_company": null
   /// }
   /// </example>
   [DataContract]
-  public class MovieCollection
+  public class CompanyInfo : Company
   {
-    [DataMember(Name = "id")]
-    public int Id { get; set; }
+    [DataMember(Name = "description")]
+    public string Description { get; set; }
 
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
+    [DataMember(Name = "headquarters")]
+    public string Headquarters { get; set; }
 
-    [DataMember(Name = "backdrop_path")]
-    public string BackdropPath { get; set; }
+    [DataMember(Name = "homepage")]
+    public string Homepage { get; set; }
 
-    [DataMember(Name = "poster_path")]
-    public string PosterPath { get; set; }
+    [DataMember(Name = "logo_path")]
+    public string LogoPath { get; set; }
 
-    public override string ToString()
-    {
-      return Name;
-    }
+    [DataMember(Name = "parent_company")]
+    public string ParentCompany { get; set; }
   }
 }

@@ -1,4 +1,4 @@
-﻿#region Copyright (C) 2007-2012 Team MediaPortal
+#region Copyright (C) 2007-2012 Team MediaPortal
 
 /*
     Copyright (C) 2007-2012 Team MediaPortal
@@ -27,34 +27,28 @@ using System.Runtime.Serialization;
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the basic information for a specific MovieCollection.
+  /// Represents a single item in a PagedSearchResult.
+  /// http://help.themoviedb.org/kb/api/search-people
   /// </summary>
   /// <example>
   /// {
-  ///   "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  ///   "id": 10,
-  ///   "name": "Star Wars Collection",
-  ///   "poster_path": "/6rddZZpxMQkGlpQYVVxb2LdQRI3.jpg"
+  ///   "page": 1,
+  ///   "results": [
+  ///     {
+  ///       "adult": false,
+  ///       "id": 287,
+  ///       "name": "Brad Pitt",
+  ///       "profile_path": "/w8zJQuN7tzlm6FY9mfGKihxp3Cb.jpg"
+  ///     }
+  ///   ],
+  ///   "total_pages": 1,
+  ///   "total_results": 1
   /// }
   /// </example>
   [DataContract]
-  public class MovieCollection
+  public class PersonSearchResult : AbstractPerson
   {
-    [DataMember(Name = "id")]
-    public int Id { get; set; }
-
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
-
-    [DataMember(Name = "backdrop_path")]
-    public string BackdropPath { get; set; }
-
-    [DataMember(Name = "poster_path")]
-    public string PosterPath { get; set; }
-
-    public override string ToString()
-    {
-      return Name;
-    }
+    [DataMember(Name = "adult")]
+    public bool Adult { get; set; }
   }
 }

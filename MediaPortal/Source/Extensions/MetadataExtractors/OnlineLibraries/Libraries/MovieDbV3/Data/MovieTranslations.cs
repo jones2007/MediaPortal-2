@@ -28,48 +28,52 @@ using System.Runtime.Serialization;
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the trailers for a specific <see cref="Movie"/>.
-  /// http://help.themoviedb.org/kb/api/movie-trailers
+  /// Contains a list of available translation for a specific <see cref="Movie"/>.
+  /// http://help.themoviedb.org/kb/api/movie-translations
   /// </summary>
   /// <example>
   /// {
   ///   "id": 11,
-  ///   "quicktime": [],
-  ///   "youtube": [
+  ///   "translations": [
   ///     {
-  ///       "name": "Trailer 1",
-  ///       "size": "Standard",
-  ///       "source": "9gvqpFbRKtQ"
+  ///       "english_name": "English",
+  ///       "iso_639_1": "en",
+  ///       "name": "English"
+  ///     },
+  ///     {
+  ///       "english_name": "German",
+  ///       "iso_639_1": "de",
+  ///       "name": "Deutsch"
   ///     }
   ///   ]
   /// }
   /// </example>
   [DataContract]
-  public class MovieTrailers
+  public class MovieTranslations
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
-    #region Trailer class
+    #region Translation class
 
     /// <example>
     ///     {
-    ///       "name": "Trailer 1",
-    ///       "size": "Standard",
-    ///       "source": "9gvqpFbRKtQ"
+    ///       "english_name": "German",
+    ///       "iso_639_1": "de",
+    ///       "name": "Deutsch"
     ///     }
     /// </example>
     [DataContract]
-    public class Trailer
+    public class Translation
     {
+      [DataMember(Name = "english_name")]
+      public string EnglishName { get; set; }
+
+      [DataMember(Name = "iso_639_1")]
+      public string Language { get; set; }
+
       [DataMember(Name = "name")]
       public string Name { get; set; }
-
-      [DataMember(Name = "size")]
-      public string Size { get; set; }
-
-      [DataMember(Name = "source")]
-      public string Source { get; set; }
 
       public override string ToString()
       {
@@ -79,10 +83,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 
     #endregion
 
-    [DataMember(Name = "quicktime")]
-    public List<Trailer> QuickTimeTrailers { get; set; }
-
-    [DataMember(Name = "youtube")]
-    public List<Trailer> YoutubeTrailers { get; set; }
+    [DataMember(Name = "translations")]
+    public List<Translation> Translations { get; set; }
   }
 }

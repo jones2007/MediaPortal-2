@@ -28,39 +28,86 @@ using System.Runtime.Serialization;
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the cast information for a specific movie id.
+  /// Contains all cast information for a specific <see cref="Movie"/>.
+  /// http://help.themoviedb.org/kb/api/movie-casts
   /// </summary>
-  /// <remarks>
-  ///{
-  ///"id": 550,
-  ///"cast": [
-  ///    {
-  ///        "id": 819,
-  ///        "name": "Edward Norton",
-  ///        "character": "The Narrator",
-  ///        "order": 0,
-  ///        "profile_path": "/7cf2mCVI0qv2PnZVNbbEktS8Xae.jpg"
-  ///        }
-  ///    ],
-  ///"crew": [
-  ///    {
-  ///        "id": 7469,
-  ///        "name": "Jim Uhls",
-  ///        "department": "Writing",
-  ///        "job": "Author",
-  ///        "profile_path": null
-  ///        }
-  ///    ]
-  ///}
-  ///</remarks>
+  /// <example>
+  /// {
+  ///   "cast": [
+  ///     {
+  ///       "character": "Luke Skywalker",
+  ///       "id": 2,
+  ///       "name": "Mark Hamill",
+  ///       "order": 3,
+  ///       "profile_path": "/a85lLkADqD2Ab03cfMyJVQaE1UR.jpg"
+  ///     }
+  ///   ],
+  ///   "crew": [
+  ///     {
+  ///       "department": "Directing",
+  ///       "id": 1,
+  ///       "job": "Director",
+  ///       "name": "George Lucas",
+  ///       "profile_path": "/7Q5FVw6RhI1gsr1QHmJZuwxshRF.jpg"
+  ///     }
+  ///   ],
+  ///   "id": 11
+  /// }
+  /// </example>
   [DataContract]
   public class MovieCasts
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
+    #region CastItem class
+
+    /// <example>
+    ///     {
+    ///       "character": "Luke Skywalker",
+    ///       "id": 2,
+    ///       "name": "Mark Hamill",
+    ///       "order": 3,
+    ///       "profile_path": "/a85lLkADqD2Ab03cfMyJVQaE1UR.jpg"
+    ///     }
+    /// </example>
+    [DataContract]
+    public class CastItem : AbstractPerson
+    {
+      [DataMember(Name = "character")]
+      public string Character { get; set; }
+
+      [DataMember(Name = "order")]
+      public string Order { get; set; }
+    }
+
+    #endregion
+
     [DataMember(Name = "cast")]
     public List<CastItem> Cast { get; set; }
+
+    #region CrewItem class
+
+    /// <example>
+    ///     {
+    ///       "department": "Directing",
+    ///       "id": 1,
+    ///       "job": "Director",
+    ///       "name": "George Lucas",
+    ///       "profile_path": "/7Q5FVw6RhI1gsr1QHmJZuwxshRF.jpg"
+    ///     }
+    /// </example>
+    [DataContract]
+    public class CrewItem : AbstractPerson
+    {
+      [DataMember(Name = "department")]
+      public string Department { get; set; }
+
+      [DataMember(Name = "job")]
+      public string Job { get; set; }
+    }
+
+    #endregion
 
     [DataMember(Name = "crew")]
     public List<CrewItem> Crew { get; set; }

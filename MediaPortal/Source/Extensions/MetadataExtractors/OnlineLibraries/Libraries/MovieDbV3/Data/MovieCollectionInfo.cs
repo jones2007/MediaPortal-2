@@ -1,4 +1,4 @@
-#region Copyright (C) 2007-2012 Team MediaPortal
+﻿#region Copyright (C) 2007-2012 Team MediaPortal
 
 /*
     Copyright (C) 2007-2012 Team MediaPortal
@@ -22,33 +22,35 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
-  ///        {
-  ///             "name": "Trailer 1",
-  ///             "size": "HD",
-  ///             "source": "SUXWAEX2jlg"
-  ///        }
+  /// <summary>
+  /// Contains all available information about a specific <see cref="MovieCollection"/>.
+  /// http://help.themoviedb.org/kb/api/collection-info
+  /// </summary>
+  /// <example>
+  /// {
+  ///   "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
+  ///   "id": 10,
+  ///   "name": "Star Wars Collection",
+  ///   "parts": [{
+  ///     "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
+  ///     "id": 11,
+  ///     "poster_path": "/qoETrQ73Jbd2LDN8EUfNgUerhzG.jpg",
+  ///     "release_date": "1977-12-27",
+  ///     "title": "Star Wars: Episode IV: A New Hope"
+  ///     }
+  ///   ],
+  ///   "poster_path": "/6rddZZpxMQkGlpQYVVxb2LdQRI3.jpg"
+  /// }
+  /// </example>
   [DataContract]
-  public class Trailer
+  public class MovieCollectionInfo : MovieCollection
   {
-    // Not filled by API!
-    public int MovieId { get; set; }
-
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
-
-    [DataMember(Name = "size")]
-    public string Size { get; set; }
-
-    [DataMember(Name = "source")]
-    public string Source { get; set; }
-
-    public override string ToString()
-    {
-      return Name;
-    }
+    [DataMember(Name = "parts")]
+    public List<AbstractMovie> Parts { get; set; }
   }
 }

@@ -22,39 +22,59 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the basic information for a specific MovieCollection.
+  /// Contains all available release and certification data for a specific <see cref="Movie"/>.
+  /// http://help.themoviedb.org/kb/api/movie-release-info
   /// </summary>
   /// <example>
   /// {
-  ///   "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  ///   "id": 10,
-  ///   "name": "Star Wars Collection",
-  ///   "poster_path": "/6rddZZpxMQkGlpQYVVxb2LdQRI3.jpg"
+  ///   "countries": [
+  ///     {
+  ///       "certification": "PG",
+  ///       "iso_3166_1": "US",
+  ///       "release_date": "1977-05-25"
+  ///     }
+  ///   ],
+  ///   "id": 11
   /// }
   /// </example>
   [DataContract]
-  public class MovieCollection
+  public class MovieReleases
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
+    #region Release class
 
-    [DataMember(Name = "backdrop_path")]
-    public string BackdropPath { get; set; }
-
-    [DataMember(Name = "poster_path")]
-    public string PosterPath { get; set; }
-
-    public override string ToString()
+    /// <example>
+    ///     {
+    ///       "certification": "PG",
+    ///       "iso_3166_1": "US",
+    ///       "release_date": "1977-05-25"
+    ///     }
+    /// </example>
+    [DataContract]
+    public class Release
     {
-      return Name;
+      [DataMember(Name = "certification")]
+      public string Certification { get; set; }
+
+      [DataMember(Name = "iso_3166_1")]
+      public string CountryCode { get; set; }
+
+      [DataMember(Name = "release_date")]
+      public DateTime? ReleaseDate { get; set; }
     }
+
+    #endregion
+
+    [DataMember(Name = "countries")]
+    public List<Release> Releases { get; set; }
   }
 }

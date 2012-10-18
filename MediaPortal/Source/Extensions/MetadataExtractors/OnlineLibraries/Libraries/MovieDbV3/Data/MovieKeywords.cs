@@ -22,39 +22,62 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
-  /// Contains the basic information for a specific MovieCollection.
+  /// Contains all keywords that have been added to a specific <see cref="Movie"/>.
+  /// http://help.themoviedb.org/kb/api/movie-keywords
   /// </summary>
   /// <example>
   /// {
-  ///   "backdrop_path": "/mOTtuakUTb1qY6jG6lzMfjdhLwc.jpg",
-  ///   "id": 10,
-  ///   "name": "Star Wars Collection",
-  ///   "poster_path": "/6rddZZpxMQkGlpQYVVxb2LdQRI3.jpg"
+  ///   "id": 11,
+  ///   "keywords": [
+  ///     {
+  ///       "id": 378,
+  ///       "name": "prison"
+  ///     },
+  ///     {
+  ///       "id": 803,
+  ///       "name": "android"
+  ///     }
+  ///   ]
   /// }
   /// </example>
   [DataContract]
-  public class MovieCollection
+  public class MovieKeywords
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }
 
-    [DataMember(Name = "name")]
-    public string Name { get; set; }
+    #region Keyword class
 
-    [DataMember(Name = "backdrop_path")]
-    public string BackdropPath { get; set; }
-
-    [DataMember(Name = "poster_path")]
-    public string PosterPath { get; set; }
-
-    public override string ToString()
+    /// <remarks>
+    ///   {
+    ///   "id": 33851,
+    ///   "name": "capitalism"
+    ///   }
+    /// </remarks>
+    [DataContract]
+    public class Keyword
     {
-      return Name;
+      [DataMember(Name = "id")]
+      public int Id { get; set; }
+
+      [DataMember(Name = "name")]
+      public string Name { get; set; }
+
+      public override string ToString()
+      {
+        return Name;
+      }
     }
+
+    #endregion
+
+    [DataMember(Name = "keywords")]
+    public List<Keyword> Keywords { get; set; }
   }
 }

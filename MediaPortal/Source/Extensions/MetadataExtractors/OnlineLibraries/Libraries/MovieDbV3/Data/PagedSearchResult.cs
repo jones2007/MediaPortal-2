@@ -27,6 +27,30 @@ using System.Runtime.Serialization;
 
 namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
+  /// <summary>
+  /// A generic paged list of search results.
+  /// </summary>
+  /// <example>
+  /// {
+  ///   "page": 1,
+  ///   "results": [
+  ///     {
+  ///       "adult": false,
+  ///       "backdrop_path": "/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg",
+  ///       "id": 550,
+  ///       "original_title": "Fight Club",
+  ///       "release_date": "1999-10-15",
+  ///       "poster_path": "/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg",
+  ///       "popularity": 61151.745000000003,
+  ///       "title": "Fight Club",
+  ///       "vote_average": 9.0999999999999996,
+  ///       "vote_count": 174
+  ///     }
+  ///   ],
+  ///   "total_pages": 1,
+  ///   "total_results": 5
+  /// }
+  /// </example>
   [DataContract]
   internal class PagedSearchResult<T>
   {
