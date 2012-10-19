@@ -29,9 +29,10 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 {
   /// <summary>
   /// Contains the basic information for a specific Movie.
+  /// todo: Renamed AbstractMovie to something else, because it is not abstract anymore. Maybe 'Movie' -> 'MovieInfo' and 'AbstractMovie' to 'Movie' or 'MovieBase'
   /// </summary>
   [DataContract]
-  public abstract class AbstractMovie
+  public class AbstractMovie
   {
     [DataMember(Name = "id")]
     public int Id { get; set; }

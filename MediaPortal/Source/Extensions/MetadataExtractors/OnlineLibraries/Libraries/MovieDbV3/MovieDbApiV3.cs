@@ -40,11 +40,24 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     public const string DefaultLanguage = "en";
 
     private const string URL_API_BASE =   "http://api.themoviedb.org/3/";
-    private const string URL_QUERY =      URL_API_BASE + "search/movie";
-    private const string URL_GETMOVIE =   URL_API_BASE + "movie/{0}";
+    private const string URL_QUERY = URL_API_BASE + "search/movie";
+
+    private const string URL_GETMOVIE = URL_API_BASE + "movie/{0}";
+    private const string URL_GETIMAGES = URL_API_BASE + "movie/{0}/images";
     private const string URL_GETCASTCREW = URL_API_BASE + "movie/{0}/casts";
-    private const string URL_GETIMAGES =  URL_API_BASE + "movie/{0}/images";
-    private const string URL_GETCONFIG =  URL_API_BASE + "configuration";
+
+    private const string URL_GET_COLLECTION = URL_API_BASE + "collection/{0}";
+    private const string URL_GET_COLLECTION_IMAGES = URL_API_BASE + "collection/{0}/images";
+
+    private const string URL_GET_PERSON = URL_API_BASE + "person/{0}";
+    private const string URL_GET_PERSON_IMAGES = URL_API_BASE + "person/{0}/images";
+
+    private const string URL_GETCONFIG = URL_API_BASE + "configuration";
+
+
+    private const string OBJECT_MOVIE = "Movies";
+    private const string OBJECT_COLLECTION = "Collections";
+    private const string OBJECT_PERSON = "People";
 
     #endregion
 
@@ -105,7 +118,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     /// <returns>Movie information</returns>
     public Movie GetMovie(int id, string language)
     {
-      string cache = CreateAndGetCacheName(id, language);
+      string cache = CreateAndGetCacheName(OBJECT_MOVIE, id, language);
       if (!string.IsNullOrEmpty(cache) && File.Exists(cache))
       {
         string json = File.ReadAllText(cache);
@@ -124,7 +137,7 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     /// <returns>Movie information</returns>
     public Movie GetMovie(string imdbId, string language)
     {
-      string cache = CreateAndGetCacheName(imdbId, language);
+      string cache = CreateAndGetCacheName(OBJECT_MOVIE, imdbId, language);
       if (!string.IsNullOrEmpty(cache) && File.Exists(cache))
       {
         string json = File.ReadAllText(cache);
@@ -132,6 +145,25 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
       }
       string url = GetUrl(URL_GETMOVIE, language, imdbId);
       return Download<Movie>(url, cache);
+    }
+
+    /// <summary>
+    /// Returns detailed information for a single <see cref="Movie"/> with given <paramref name="id"/>. This method caches request
+    /// to same movies using the cache path given in <see cref="MovieDbApiV3"/> constructor.
+    /// </summary>
+    /// <param name="collectionId">TMDB id of movie</param>
+    /// <param name="language">Language</param>
+    /// <returns>Movie information</returns>
+    public MovieCollectionInfo GetCollection(int collectionId, string language)
+    {
+      string cache = CreateAndGetCacheName(OBJECT_COLLECTION, collectionId, language);
+      if (!string.IsNullOrEmpty(cache) && File.Exists(cache))
+      {
+        string json = File.ReadAllText(cache);
+        return JsonConvert.DeserializeObject<MovieCollectionInfo>(json);
+      }
+      string url = GetUrl(URL_GET_COLLECTION, language, collectionId);
+      return Download<MovieCollectionInfo>(url, cache);
     }
 
     /// <summary>
@@ -171,36 +203,46 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     }
 
     /// <summary>
+    /// Returns a <see cref="MovieCollectionImages"/> for the given <paramref name="id"/>.
+    /// </summary>
+    /// <param name="id">TMDB id of collection</param>
+    /// <param name="language">Language</param>
+    /// <returns>Image collection</returns>
+    public MovieCollectionImages GetCollectionImages(int id, string language)
+    {
+      string url = GetUrl(URL_GET_COLLECTION_IMAGES, language, id);
+      MovieCollectionImages result = Download<MovieCollectionImages>(url);
+      result.SetCollectionIds();
+      return result;
+    }
+
+    /// <summary>
+    /// Returns a <see cref="PersonImages"/> for the given <paramref name="id"/>.
+    /// </summary>
+    /// <param name="id">TMDB id of person</param>
+    /// <param name="language">Language</param>
+    /// <returns>Image collection</returns>
+    public PersonImages GetPersonImages(int id, string language)
+    {
+      string url = GetUrl(URL_GET_PERSON_IMAGES, language, id);
+      PersonImages result = Download<PersonImages>(url);
+      result.SetPersonIds();
+      return result;
+    }
+
+    /// <summary>
     /// Downloads images in "original" size and saves them to cache.
     /// </summary>
     /// <param name="image">Image to download</param>
     /// <param name="category">Image category (Poster, Cover, Backdrop...)</param>
     /// <returns><c>true</c> if successful</returns>
-    public bool DownloadImage(ImageFile image, string category)
+    public bool DownloadImage(ImageFile image)
     {
-      string cacheFileName = CreateAndGetCacheName(image, category);
+      string cacheFileName = CreateAndGetCacheName(image);
       if (string.IsNullOrEmpty(cacheFileName))
         return false;
 
       string sourceUri = Configuration.Images.BaseUrl + "original" + image.FilePath;
-      DownloadFile(sourceUri, cacheFileName);
-      return true;
-    }
-
-    public bool DownloadImages(MovieCollection movieCollection)
-    {
-      DownloadImages(movieCollection, true);
-      DownloadImages(movieCollection, false);
-      return true;
-    }
-
-    private bool DownloadImages(MovieCollection movieCollection, bool usePoster)
-    {
-      string cacheFileName = CreateAndGetCacheName(movieCollection, usePoster);
-      if (string.IsNullOrEmpty(cacheFileName))
-        return false;
-
-      string sourceUri = Configuration.Images.BaseUrl + "original" + (usePoster ? movieCollection.PosterPath : movieCollection.BackdropPath);
       DownloadFile(sourceUri, cacheFileName);
       return true;
     }
@@ -277,13 +319,12 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     /// Creates a local file name for loading and saving <see cref="ImageFile"/>s.
     /// </summary>
     /// <param name="image"></param>
-    /// <param name="category"></param>
     /// <returns>Cache file name or <c>null</c> if directory could not be created</returns>
-    protected string CreateAndGetCacheName(ImageFile image, string category)
+    protected string CreateAndGetCacheName(ImageFile image)
     {
       try
       {
-        string folder = Path.Combine(_cachePath, string.Format(@"{0}\{1}", image.ParentObjectId, category));
+        string folder = Path.Combine(_cachePath, string.Format(@"{0}\{1}\{2}", image.ParentObject, image.ParentObjectId, image.ImageCategory));
         if (!Directory.Exists(folder))
           Directory.CreateDirectory(folder);
         return Path.Combine(folder, image.FilePath.TrimStart(new[] { '/' }));
@@ -296,44 +337,35 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3
     }
 
     /// <summary>
-    /// Creates a local file name for loading and saving images of a <see cref="MovieCollection"/>.
-    /// </summary>
-    /// <param name="collection">MovieCollection</param>
-    /// <param name="usePoster"><c>true</c> for Poster, <c>false</c> for Backdrop</param>
-    /// <returns>Cache file name or <c>null</c> if directory could not be created</returns>
-    protected string CreateAndGetCacheName(MovieCollection collection, bool usePoster)
-    {
-      try
-      {
-        string folder = Path.Combine(_cachePath, string.Format(@"COLL_{0}\{1}", collection.Id, usePoster ? "Posters" : "Backdrops"));
-        if (!Directory.Exists(folder))
-          Directory.CreateDirectory(folder);
-        string fileName = usePoster ? collection.PosterPath : collection.BackdropPath;
-        if (string.IsNullOrEmpty(fileName))
-          return null;
-        return Path.Combine(folder, fileName.TrimStart(new[] { '/' }));
-      }
-      catch
-      {
-        // TODO: logging
-        return null;
-      }
-    }
-
-    /// <summary>
     /// Creates a local file name for loading and saving details for movie. It supports both TMDB id and IMDB id.
     /// </summary>
-    /// <param name="movieId"></param>
+    /// <param name="movieDbObject">Can be "Movie", "Collection" or "Person"</param>
+    /// <param name="id">Can be a TMDB or IMDB id</param>
     /// <param name="language"></param>
     /// <returns>Cache file name or <c>null</c> if directory could not be created</returns>
-    protected string CreateAndGetCacheName<TE>(TE movieId, string language)
+    protected string CreateAndGetCacheName<TE>(string movieDbObject, TE id, string language)
     {
       try
       {
-        string folder = Path.Combine(_cachePath, movieId.ToString());
+        string filename;
+        switch (movieDbObject)
+        {
+          case OBJECT_COLLECTION:
+            filename = string.Format("collection_{0}.json", language);
+            break;
+          case OBJECT_PERSON:
+            filename = string.Format("person_{0}.json", language);
+            break;
+          case OBJECT_MOVIE:
+          default:
+            filename = string.Format("movie_{0}.json", language);
+            break;
+        }
+
+        string folder = Path.Combine(_cachePath, string.Format(@"{0}\{1}", movieDbObject, id));
         if (!Directory.Exists(folder))
           Directory.CreateDirectory(folder);
-        return Path.Combine(folder, string.Format("movie_{0}.json", language));
+        return Path.Combine(folder, filename);
       }
       catch
       {

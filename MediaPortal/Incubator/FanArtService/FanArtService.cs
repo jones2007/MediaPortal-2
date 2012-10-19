@@ -112,11 +112,11 @@ namespace MediaPortal.Extensions.UserServices.FanArtService
 
         case FanArtConstants.FanArtMediaType.Movie:
           int movieDbId;
-          return !MovieTheMovieDbMatcher.Instance.TryGetMovieDbId(name, out movieDbId) ? null : Path.Combine(MovieTheMovieDbMatcher.CACHE_PATH, movieDbId.ToString());
+          return !MovieTheMovieDbMatcher.Instance.TryGetMovieDbId(name, out movieDbId) ? null : Path.Combine(MovieTheMovieDbMatcher.CACHE_PATH, @"Movies\" + movieDbId.ToString());
 
         case FanArtConstants.FanArtMediaType.MovieCollection:
           int collectionId;
-          return !MovieTheMovieDbMatcher.Instance.TryGetCollectionId(name, out collectionId) ? null : Path.Combine(MovieTheMovieDbMatcher.CACHE_PATH, "COLL_" + collectionId);
+          return !MovieTheMovieDbMatcher.Instance.TryGetCollectionId(name, out collectionId) ? null : Path.Combine(MovieTheMovieDbMatcher.CACHE_PATH, @"Collections\" + collectionId.ToString());
 
         default:
           return null;

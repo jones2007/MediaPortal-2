@@ -72,8 +72,20 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 
     public void SetMovieIds()
     {
-      if (Backdrops != null) Backdrops.ForEach(c => c.ParentObjectId = Id);
-      if (Posters != null) Posters.ForEach(c => c.ParentObjectId = Id);
+      if (Backdrops != null)
+        Backdrops.ForEach(c =>
+                            {
+                              c.ParentObject = "Movies";
+                              c.ParentObjectId = Id;
+                              c.ImageCategory = "Backdrops";
+                            });
+      if (Posters != null)
+        Posters.ForEach(c =>
+                          {
+                            c.ParentObject = "Movies";
+                            c.ParentObjectId = Id;
+                            c.ImageCategory = "Posters";
+                          });
     }
   }
 }

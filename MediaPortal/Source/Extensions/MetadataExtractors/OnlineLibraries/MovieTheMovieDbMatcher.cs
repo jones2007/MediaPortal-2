@@ -52,6 +52,11 @@ namespace MediaPortal.Extensions.OnlineLibraries
     #region Constants
 
     public static string CACHE_PATH = ServiceRegistration.Get<IPathManager>().GetPath(@"<DATA>\TheMovieDB\");
+
+    public static string CACHE_PATH_MOVIES = Path.Combine(CACHE_PATH, @"Movies\");
+    public static string CACHE_PATH_COLLECTIONS = Path.Combine(CACHE_PATH, @"Collections\");
+    public static string CACHE_PATH_PEOPLE = Path.Combine(CACHE_PATH, @"People\");
+
     protected static string _matchesSettingsFile = Path.Combine(CACHE_PATH, "Matches.xml");
     protected static string _collectionMatchesFile = Path.Combine(CACHE_PATH, "CollectionMatches.xml");
     
@@ -305,7 +310,20 @@ namespace MediaPortal.Extensions.OnlineLibraries
         // If movie belongs to a collection, also download collection poster and fanart
         Movie movie;
         if (_movieDb.GetMovie(movieDbId, out movie) && movie.Collection != null)
-          SaveBanners(movie.Collection);
+        {
+          // directly get collection fanart
+          // no need to get collectionInfo, because CollectionId is already known
+          MovieCollectionImages collectionImages;
+          if (_movieDb.GetCollectionFanArt(movie.Collection.Id, out collectionImages))
+          {
+            ServiceRegistration.Get<ILogger>().Debug(
+              "MovieTheMovieDbMatcher Download: Begin saving banners for collection ID {0}", movie.Collection.Id);
+            SaveBanners(collectionImages.Backdrops);
+            SaveBanners(collectionImages.Posters);
+            ServiceRegistration.Get<ILogger>().Debug(
+              "MovieTheMovieDbMatcher Download: Finished saving banners for collection ID {0}", movie.Collection.Id);
+          }
+        }
 
         MovieImages imageCollection;
         if (!_movieDb.GetMovieFanArt(movieDbId, out imageCollection))
@@ -313,8 +331,8 @@ namespace MediaPortal.Extensions.OnlineLibraries
 
         // Save Banners
         ServiceRegistration.Get<ILogger>().Debug("MovieTheMovieDbMatcher Download: Begin saving banners for ID {0}", movieDbId);
-        SaveBanners(imageCollection.Backdrops, "Backdrops");
-        SaveBanners(imageCollection.Posters, "Posters");
+        SaveBanners(imageCollection.Backdrops);
+        SaveBanners(imageCollection.Posters);
         ServiceRegistration.Get<ILogger>().Debug("MovieTheMovieDbMatcher Download: Finished saving banners for ID {0}", movieDbId);
 
         // Remember we are finished
@@ -326,13 +344,7 @@ namespace MediaPortal.Extensions.OnlineLibraries
       }
     }
 
-    private void SaveBanners(MovieCollection movieCollection)
-    {
-      bool result = _movieDb.DownloadImages(movieCollection);
-      ServiceRegistration.Get<ILogger>().Debug("MovieTheMovieDbMatcher Download Collection: Saved {0} {1}", movieCollection.Name, result);
-    }
-
-    private int SaveBanners(IEnumerable<ImageFile> banners, string category)
+    private int SaveBanners(IEnumerable<ImageFile> banners)
     {
       if (banners == null)
         return 0;
@@ -342,10 +354,10 @@ namespace MediaPortal.Extensions.OnlineLibraries
       {
         if (idx >= MAX_FANART_IMAGES)
           break;
-        if (_movieDb.DownloadImage(banner, category))
+        if (_movieDb.DownloadImage(banner))
           idx++;
       }
-      ServiceRegistration.Get<ILogger>().Debug("MovieTheMovieDbMatcher Download: Saved {0} {1}", idx, category);
+      ServiceRegistration.Get<ILogger>().Debug("MovieTheMovieDbMatcher Download: Saved {0}", idx);
       return idx;
     }
   }

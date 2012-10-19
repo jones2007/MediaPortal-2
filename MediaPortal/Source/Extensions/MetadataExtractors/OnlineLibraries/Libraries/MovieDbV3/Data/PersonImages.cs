@@ -56,7 +56,13 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
 
     public void SetPersonIds()
     {
-      if (Profiles != null) Profiles.ForEach(c => c.ParentObjectId = Id);
+      if (Profiles != null)
+        Profiles.ForEach(c =>
+        {
+          c.ParentObject = "People";
+          c.ParentObjectId = Id;
+          c.ImageCategory = "Profiles";
+        });
     }
   }
 }

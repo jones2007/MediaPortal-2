@@ -184,6 +184,12 @@ namespace MediaPortal.Extensions.OnlineLibraries.TheMovieDB
       return movieCast != null;
     }
 
+    public bool GetCollection(int collectionId, out MovieCollection collectionDetail)
+    {
+      collectionDetail = _movieDbHandler.GetCollection(collectionId, PreferredLanguage);
+      return collectionDetail != null;
+    }
+
     /// <summary>
     /// Removes special characters and compares the remaining strings. Strings are processed by <see cref="RemoveCharacters"/> before comparing.
     /// The result is <c>true</c>, if the cleaned strings are equal or have a Levenshtein distance less or equal to <see cref="MAX_LEVENSHTEIN_DIST"/>.
@@ -236,14 +242,21 @@ namespace MediaPortal.Extensions.OnlineLibraries.TheMovieDB
       return imageCollection != null;
     }
 
-    public bool DownloadImage(ImageFile image, string category)
+    /// <summary>
+    /// Gets images for the requested movie.
+    /// </summary>
+    /// <param name="id">TMDB ID of movie</param>
+    /// <param name="imageCollection">Returns the ImageCollection</param>
+    /// <returns><c>true</c> if successful</returns>
+    public bool GetCollectionFanArt(int id, out MovieCollectionImages imageCollection)
     {
-      return _movieDbHandler.DownloadImage(image, category);
+      imageCollection = _movieDbHandler.GetCollectionImages(id, null); // Download all image information, filter later!
+      return imageCollection != null;
     }
 
-    public bool DownloadImages(MovieCollection movieCollection)
+    public bool DownloadImage(ImageFile image)
     {
-      return _movieDbHandler.DownloadImages(movieCollection);
+      return _movieDbHandler.DownloadImage(image);
     }
   }
 }

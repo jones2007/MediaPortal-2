@@ -57,7 +57,9 @@ namespace MediaPortal.Extensions.OnlineLibraries.Libraries.MovieDbV3.Data
     public string Language { get; set; }
 
     // Not filled by API!
+    public string ParentObject { get; set; }
     public int ParentObjectId { get; set; }
+    public string ImageCategory { get; set; }
 
     public override string ToString()
     {
