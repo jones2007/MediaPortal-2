@@ -24,7 +24,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using DirectShowLib;
+using DirectShow;
 using MediaPortal.Common;
 using MediaPortal.Common.Logging;
 using MediaPortal.Common.Settings;

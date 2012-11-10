@@ -28,7 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using BDInfo;
-using DirectShowLib;
+using DirectShow;
 using MediaPortal.Common;
 using MediaPortal.Common.Settings;
 using MediaPortal.Plugins.BDHandler.Settings;
@@ -108,7 +108,7 @@ namespace MediaPortal.UI.Players.Video
           // load the file
           int hr = fileSourceFilter.Load(strFile, null);
           Marshal.ReleaseComObject(fileSourceFilter);
-          DsError.ThrowExceptionForHR(hr);
+          new Sonic.HRESULT(hr).Throw();
         }
         else
         {

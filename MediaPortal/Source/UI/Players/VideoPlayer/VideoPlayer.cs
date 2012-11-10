@@ -30,7 +30,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Windows.Forms;
-using DirectShowLib;
+using DirectShow;
 using MediaPortal.Common;
 using MediaPortal.Common.Localization;
 using MediaPortal.Common.Logging;
@@ -47,6 +47,7 @@ using MediaPortal.UI.SkinEngine.Players;
 using MediaPortal.UI.SkinEngine.SkinManagement;
 using MediaPortal.Utilities.Exceptions;
 using SlimDX.Direct3D9;
+using Sonic;
 
 namespace MediaPortal.UI.Players.Video
 {
@@ -236,7 +237,7 @@ namespace MediaPortal.UI.Players.Video
             IMediaEventEx eventEx = (IMediaEventEx) _graphBuilder;
 
             EventCode evCode;
-            IntPtr param1, param2;
+            int param1, param2;
 
             while (eventEx.GetEvent(out evCode, out param1, out param2, 0) == 0)
             {
@@ -337,12 +338,12 @@ namespace MediaPortal.UI.Players.Video
         // Now run the graph, i.e. the DVD player needs a running graph before getting informations from dvd filter.
         IMediaControl mc = (IMediaControl) _graphBuilder;
         int hr = mc.Run();
-        DsError.ThrowExceptionForHR(hr);
+        new HRESULT(hr).Throw();
 
         _initialized = true;
         OnGraphRunning();
       }
-      catch (Exception)
+      catch (Exception ex)
       {
         Shutdown();
         throw;
@@ -507,7 +508,7 @@ namespace MediaPortal.UI.Players.Video
     /// Try to add filter by name to graph.
     /// </summary>
     /// <param name="codecInfo">Filter name to add</param>
-    /// <param name="filterCategory">GUID of filter category (<see cref="DirectShowLib.FilterCategory"/> members)></param>
+    /// <param name="filterCategory">GUID of filter category (<see cref="FilterCategory"/> members)></param>
     /// <returns>true if successful</returns>
     protected bool TryAdd(CodecInfo codecInfo, Guid filterCategory)
     {
@@ -522,9 +523,22 @@ namespace MediaPortal.UI.Players.Video
     /// </summary>
     protected virtual void AddFileSource()
     {
+      int hr = 0;
+
+      var source = new DxPlayer.NetStreamSourceFilter();
+      source.SetSourceStream(_resourceAccessor.OpenRead());
+      hr = _graphBuilder.AddFilter(source, source.Name);
+      Sonic.DSFilter source2 = new Sonic.DSFilter(source);
+      hr = source2.OutputPin.Render();
+
       // Render the file
+<<<<<<< HEAD
       int hr = _graphBuilder.RenderFile(SourcePathOrUrl, null);
       DsError.ThrowExceptionForHR(hr);
+=======
+      //int hr = _graphBuilder.RenderFile(_resourceAccessor.LocalFileSystemPath, null);
+      new HRESULT(hr).Throw();
+>>>>>>> 50d85d8... removed DirectShowLib and replaced all calls with DirectShow wrappers from DotNetStreamSource project
     }
 
     /// <summary>
@@ -1162,13 +1176,14 @@ namespace MediaPortal.UI.Players.Video
 
           for (int i = 0; i < streamCount; ++i)
           {
-            AMMediaType mediaType;
-            AMStreamSelectInfoFlags selectInfoFlags;
-            int groupNumber, lcid;
-            string name;
-            object pppunk, ppobject;
+            IntPtr mediaType_ptr = IntPtr.Zero, selectInfoFlags_ptr = IntPtr.Zero, lcid_ptr = IntPtr.Zero, groupNumber_ptr = IntPtr.Zero, name_ptr = IntPtr.Zero, pppunk = IntPtr.Zero, ppobject = IntPtr.Zero;
 
-            streamSelector.Info(i, out mediaType, out selectInfoFlags, out lcid, out groupNumber, out name, out pppunk, out ppobject);
+            streamSelector.Info(i, mediaType_ptr, selectInfoFlags_ptr, lcid_ptr, groupNumber_ptr, name_ptr, pppunk, ppobject);
+
+            AMMediaType mediaType = mediaType_ptr != IntPtr.Zero ? Marshal.PtrToStructure(mediaType_ptr, typeof(AMMediaType)) as AMMediaType : new AMMediaType();
+            int groupNumber = groupNumber_ptr != IntPtr.Zero ? Marshal.ReadInt32(groupNumber_ptr) : 0;
+            int lcid = lcid_ptr != IntPtr.Zero ? Marshal.ReadInt32(lcid_ptr) : 0;
+            string name = name_ptr != IntPtr.Zero ? Marshal.PtrToStringAuto(name_ptr) : string.Empty;
 
             // If stream does not contain a LCID, try a lookup from stream name.
             if (lcid == 0)
