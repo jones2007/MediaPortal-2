@@ -525,20 +525,23 @@ namespace MediaPortal.UI.Players.Video
     {
       int hr = 0;
 
-      var source = new DxPlayer.NetStreamSourceFilter();
-      source.SetSourceStream(_resourceAccessor.OpenRead());
-      hr = _graphBuilder.AddFilter(source, source.Name);
-      Sonic.DSFilter source2 = new Sonic.DSFilter(source);
-      hr = source2.OutputPin.Render();
-
-      // Render the file
-<<<<<<< HEAD
-      int hr = _graphBuilder.RenderFile(SourcePathOrUrl, null);
-      DsError.ThrowExceptionForHR(hr);
-=======
-      //int hr = _graphBuilder.RenderFile(_resourceAccessor.LocalFileSystemPath, null);
+      var fileSysAc = _resourceAccessor as IFileSystemResourceAccessor;
+      if (fileSysAc != null)
+      {
+        var source = new DxPlayer.NetStreamSourceFilter();
+        fileSysAc.PrepareStreamAccess();
+        source.SetSourceStream(fileSysAc.OpenRead());
+        hr = _graphBuilder.AddFilter(source, source.Name);
+        new HRESULT(hr).Throw();
+        Sonic.DSFilter source2 = new Sonic.DSFilter(source);
+        hr = source2.OutputPin.Render();
+      }
+      else
+      {
+        // Render the file
+        hr = _graphBuilder.RenderFile(SourcePathOrUrl, null);
+      }
       new HRESULT(hr).Throw();
->>>>>>> 50d85d8... removed DirectShowLib and replaced all calls with DirectShow wrappers from DotNetStreamSource project
     }
 
     /// <summary>
