@@ -76,10 +76,10 @@
   <MappedKeyCode Code="Yellow" Key_Name="S:Yellow" />
   <MappedKeyCode Code="Blue" Key_Name="S:Blue" />
 
-  <MappedKeyCode Code="Music" Key_Name="S:None" />
-  <MappedKeyCode Code="Pictures" Key_Name="S:None" />
+  <MappedKeyCode Code="Music" Key_Name="S:Music" />
+  <MappedKeyCode Code="Pictures" Key_Name="S:Pictures" />
   <MappedKeyCode Code="Radio" Key_Name="S:None" />
-  <MappedKeyCode Code="TV" Key_Name="S:None" />
-  <MappedKeyCode Code="Videos" Key_Name="S:None" />
+  <MappedKeyCode Code="TV" Key_Name="S:LiveTV" />
+  <MappedKeyCode Code="Videos" Key_Name="S:Videos" />
   <MappedKeyCode Code="Print" Key_Name="S:None" />
 </ArrayOfMappedKeyCode>

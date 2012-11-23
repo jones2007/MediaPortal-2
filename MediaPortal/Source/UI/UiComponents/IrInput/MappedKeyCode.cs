@@ -90,10 +90,11 @@ namespace MediaPortal.UiComponents.IrInput
 
     protected static Key DeserializeKey(string serializedKey)
     {
+      string keyValue = serializedKey.Substring(2);
       if (serializedKey.StartsWith("P:"))
-        return new Key(serializedKey.Substring(2));
+        return new Key(keyValue.ToCharArray()[0]);
       else if (serializedKey.StartsWith("S:"))
-        return Key.GetSpecialKeyByName(serializedKey.Substring(2));
+        return Key.GetSpecialKeyByName(keyValue) ?? new Key(keyValue);
       else
         throw new ArgumentException(string.Format("Key cannot be deserialized from '{0}', invalid format", serializedKey));
     }
