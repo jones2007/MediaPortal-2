@@ -1,0 +1,15 @@
+<Plugin
+    DescriptorVersion="1.0"
+    Name="Shortcut"
+    PluginId="{DAB4D0A6-4A56-4BCE-A9DD-15C1A6D850C4}"
+    Author="Morpheus_xx"
+    Copyright="GPL"
+    AutoActivate="true"
+    Description="Handles key and remote shortcuts for MP2 GUI navigation"
+    PluginVersion="1.0">
+
+  <Runtime>
+    <Assembly FileName="Shortcut.dll"/>
+    <PluginStateTracker ClassName="MediaPortal.UiComponents.Shortcut.ShortcutPlugin"/>
+  </Runtime>
+</Plugin>
