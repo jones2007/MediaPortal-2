@@ -23,6 +23,9 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using MediaPortal.Common;
 using MediaPortal.Common.Logging;
 
@@ -37,7 +40,7 @@ namespace MediaPortal.UI.Control.InputManager
   /// <remarks>
   /// Each input device should provide its own mapping of its possible input to a <see cref="Key"/>.
   /// </remarks>
-  public class Key
+  public class Key: IXmlSerializable
   {
     #region Special key constants
 
@@ -134,12 +137,12 @@ namespace MediaPortal.UI.Control.InputManager
     /// <summary>
     /// Contains the raw code.
     /// </summary>
-    protected readonly char? _rawCode;
+    protected char? _rawCode;
 
     /// <summary>
     /// Contains the key name.
     /// </summary>
-    protected readonly string _name;
+    protected string _name;
 
     #endregion
 
@@ -168,6 +171,11 @@ namespace MediaPortal.UI.Control.InputManager
       _rawCode = rawCode;
       _name = rawCode.ToString();
     }
+
+    /// <summary>
+    /// Internal constructor for XML serialization.
+    /// </summary>
+    internal Key() { }
 
     #endregion
 
@@ -252,5 +260,29 @@ namespace MediaPortal.UI.Control.InputManager
     }
 
     #endregion
+
+    public XmlSchema GetSchema ()
+    {
+      return null;
+    }
+
+    public void ReadXml (XmlReader reader)
+    {
+      string value = reader.ReadElementString();
+      string codeOrName = value.Substring(2);
+      if (value.StartsWith("P:"))
+      {
+        _rawCode = codeOrName.ToCharArray()[0];
+        _name = _rawCode.ToString();
+      }
+      else if (value.StartsWith("S:"))
+        _name = codeOrName;
+    }
+
+    public void WriteXml (XmlWriter writer)
+    {
+      string result = IsPrintableKey ? "P:" + RawCode : "S:" + Name;
+      writer.WriteString(result);
+    }
   }
 }
