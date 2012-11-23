@@ -27,9 +27,11 @@ using System.Linq;
 using System.Collections.Generic;
 using MediaPortal.Common;
 using MediaPortal.Common.PluginManager;
+using MediaPortal.Common.Settings;
 using MediaPortal.UI.Control.InputManager;
 using MediaPortal.UI.Presentation.Workflow;
 using MediaPortal.UI.SkinEngine.InputManagement;
+using MediaPortal.UiComponents.Shortcut.Settings;
 
 namespace MediaPortal.UiComponents.Shortcut
 {
@@ -38,7 +40,6 @@ namespace MediaPortal.UiComponents.Shortcut
     #region Protected fields
 
     protected IDictionary<Key, Guid> _mappedKeyCodes = new Dictionary<Key, Guid>();
-    protected IDictionary<char, Guid> _mappedPrintableKeys = new Dictionary<char, Guid>();
 
     #endregion
 
@@ -46,22 +47,35 @@ namespace MediaPortal.UiComponents.Shortcut
 
     public void RegisterShortcuts()
     {
-      ReadMappings();
+      if (!ReadMappings())
+        return;
+
       InputManager inputManager = InputManager.Instance;
       inputManager.KeyPressed += HandleKeyPress;
     }
 
-    private void ReadMappings()
+    private bool ReadMappings()
     {
-      // Read mappings from config file!
-      _mappedKeyCodes[Key.Home] = new Guid("7F702D9C-F2DD-42da-9ED8-0BA92F07787F");
-      _mappedPrintableKeys['H'] = new Guid("7F702D9C-F2DD-42da-9ED8-0BA92F07787F"); // Home
-      _mappedPrintableKeys['V'] = new Guid("A4DF2DF6-8D66-479a-9930-D7106525EB07"); // <WorkflowContributorAction Id="A4DF2DF6-8D66-479a-9930-D7106525EB07" Name="Home->Videos"...
-      _mappedPrintableKeys['T'] = new Guid("C7646667-5E63-48c7-A490-A58AC9518CFA"); // <PushNavigationTransition Id="B4A9199F-6DD4-4bda-A077-DE9C081F7703" Name="Home->SlimTvClient"...TargetState="C7646667-5E63-48c7-A490-A58AC9518CFA"
-      _mappedPrintableKeys['G'] = new Guid("7323BEB9-F7B0-48c8-80FF-8B59A4DB5385"); // <PushNavigationTransition Id="FA056DED-1122-42bd-A3DE-CB6CF2A59C66" Name="SlimTvClient->Guide"...TargetState="7323BEB9-F7B0-48c8-80FF-8B59A4DB5385"
-      _mappedPrintableKeys['W'] = new Guid("E34FDB62-1F3E-4aa9-8A61-D143E0AF77B5"); // <PushNavigationTransition Id="E34FDB62-1F3E-4aa9-8A61-D143E0AF77B5" Name="Home->Weather"...TargetState="44E1CF89-66D0-4850-A076-E1B602432983"
-      _mappedPrintableKeys['F'] = new Guid("9C3E6701-6856-49ec-A4CD-0CEB15F385F6"); // <WorkflowContributorAction Id="9C3E6701-6856-49ec-A4CD-0CEB15F385F6" Name="*->FullscreenContent"
-      _mappedPrintableKeys['C'] = new Guid("D83604C0-0936-4416-9DE8-7B6D7C50023C"); // <WorkflowContributorAction Id="D83604C0-0936-4416-9DE8-7B6D7C50023C" Name="*->CurrentMedia"
+      ISettingsManager settings = ServiceRegistration.Get<ISettingsManager>();
+      ShortcutSettings shortcutSettings = settings.Load<ShortcutSettings>();
+      if (shortcutSettings.EnableShortcuts && shortcutSettings.KeyMappings == null)
+      {
+        // Setup default mappings
+        _mappedKeyCodes[new Key('H')] = _mappedKeyCodes[Key.Start] = new Guid("7F702D9C-F2DD-42da-9ED8-0BA92F07787F"); // Home
+        _mappedKeyCodes[new Key('V')] = new Guid("A4DF2DF6-8D66-479a-9930-D7106525EB07"); // <WorkflowContributorAction Id="A4DF2DF6-8D66-479a-9930-D7106525EB07" Name="Home->Videos"...
+        _mappedKeyCodes[new Key('T')] = _mappedKeyCodes[Key.LiveTV] = new Guid("C7646667-5E63-48c7-A490-A58AC9518CFA"); // <PushNavigationTransition Id="B4A9199F-6DD4-4bda-A077-DE9C081F7703" Name="Home->SlimTvClient"...TargetState="C7646667-5E63-48c7-A490-A58AC9518CFA"
+        _mappedKeyCodes[new Key('G')] = _mappedKeyCodes[Key.Guide] = new Guid("7323BEB9-F7B0-48c8-80FF-8B59A4DB5385"); // <PushNavigationTransition Id="FA056DED-1122-42bd-A3DE-CB6CF2A59C66" Name="SlimTvClient->Guide"...TargetState="7323BEB9-F7B0-48c8-80FF-8B59A4DB5385"
+        _mappedKeyCodes[new Key('W')] = new Guid("E34FDB62-1F3E-4aa9-8A61-D143E0AF77B5"); // <PushNavigationTransition Id="E34FDB62-1F3E-4aa9-8A61-D143E0AF77B5" Name="Home->Weather"...TargetState="44E1CF89-66D0-4850-A076-E1B602432983"
+        _mappedKeyCodes[new Key('F')] = _mappedKeyCodes[Key.Red] = new Guid("9C3E6701-6856-49ec-A4CD-0CEB15F385F6"); // <WorkflowContributorAction Id="9C3E6701-6856-49ec-A4CD-0CEB15F385F6" Name="*->FullscreenContent"
+        _mappedKeyCodes[new Key('C')] = new Guid("D83604C0-0936-4416-9DE8-7B6D7C50023C"); // <WorkflowContributorAction Id="D83604C0-0936-4416-9DE8-7B6D7C50023C" Name="*->CurrentMedia"
+        shortcutSettings.KeyMappings = _mappedKeyCodes.ToList();
+        settings.Save(shortcutSettings);
+      }
+      if (shortcutSettings.KeyMappings == null)
+        return false;
+      
+      _mappedKeyCodes = shortcutSettings.KeyMappings.ToDictionary();
+      return shortcutSettings.EnableShortcuts && _mappedKeyCodes.Count > 0;
     }
 
     public void UnregisterShortcuts()
@@ -74,7 +88,7 @@ namespace MediaPortal.UiComponents.Shortcut
     {
       Guid actionOrTargetState;
       if (_mappedKeyCodes.TryGetValue(key, out actionOrTargetState) ||
-        key.RawCode.HasValue && _mappedPrintableKeys.TryGetValue(key.RawCode.Value, out actionOrTargetState))
+        key.RawCode.HasValue && _mappedKeyCodes.TryGetValue(new Key(key.RawCode.Value), out actionOrTargetState))
       {
         IWorkflowManager workflowManager = ServiceRegistration.Get<IWorkflowManager>();
         WorkflowAction action;

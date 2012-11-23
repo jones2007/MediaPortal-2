@@ -57,6 +57,8 @@
     <Compile Include="..\..\Source\Core\MediaPortal.Common\VersionInfo\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Settings\ShortcutSettings.cs" />
+    <Compile Include="ShortcutMapping.cs" />
     <Compile Include="ShortcutPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
