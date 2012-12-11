@@ -38,6 +38,7 @@ Parameters which have to be accessible by a DynamicResource lookup:
       <Model x:Key="MouseModel" Id="CA6428A7-A6E2-4dd3-9661-F89CEBAF8E62"/>
       <Model x:Key="TimeModel" Id="E821B1C8-0666-4339-8027-AA45A4F6F107"/>
       <Model x:Key="CurrentWeatherModel" Id="FC57FF5C-F72F-47E9-B973-338E31FF7FF1"/>
+      <Model x:Key="CurrentNewsModel" Id="EE1BBF83-AE5C-491C-9978-14737A2B0883"/>
     </DockPanel.Resources>
     <Grid x:Name="HeaderPanel" DockPanel.Dock="Top" Background="{ThemeResource HeaderPanelBackgroundBrush}">
       <Grid.RowDefinitions>
@@ -123,7 +124,7 @@ Parameters which have to be accessible by a DynamicResource lookup:
       <Control Grid.Column="0" Grid.Row="0" Margin="10,0,10,0" Style="{ThemeResource NotificationControlStyle}"
             HorizontalAlignment="Right" VerticalAlignment="Center"/>
 
-      <Grid  Grid.Column="1" Grid.Row="0" DataContext="{Binding Source={StaticResource CurrentWeatherModel}}" VerticalAlignment="Bottom" Margin="10,0,0,20">
+      <!--<Grid  Grid.Column="1" Grid.Row="0" DataContext="{Binding Source={StaticResource CurrentWeatherModel}}" VerticalAlignment="Bottom" Margin="10,0,0,20">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="70" />
@@ -148,6 +149,29 @@ Parameters which have to be accessible by a DynamicResource lookup:
         <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" x:Name="Date" FontSize="{ThemeResource DateTimeFontSize}"
                  Content="{Binding Source={StaticResource TimeModel}, Path=CurrentDate}"
                  Color="{ThemeResource TextColor}"/>
+      </Grid>-->
+
+      <Grid  Grid.Column="1" Grid.Row="0" Margin="0,10,0,0"  DataContext="{Binding Source={StaticResource CurrentNewsModel}}" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="380" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" Grid.Column="0" Margin="2" Grid.RowSpan="2" Width="40" Height="40" x:Name="BigIcon" Source="{Binding CurrentNewsItem.Thumb}"
+               Stretch="UniformToFill" />
+
+        <Label Grid.Row="0" Grid.Column="1" x:Name="News" FontSize="{ThemeResource TinyFontSize}" Color="{ThemeResource TextColor}" 
+               Content="{Binding CurrentNewsItem.Title}" />
+
+        <Label Grid.Row="1" Grid.Column="1" x:Name="NewSummary" Wrap="True" Scroll="Auto" ScrollSpeed="5"
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+               Content="{Binding CurrentNewsItem.Summary}"
+               Color="{ThemeResource TextColor}" FontSize="{ThemeResource TinyFontSize}"/>
+
       </Grid>
 
 
